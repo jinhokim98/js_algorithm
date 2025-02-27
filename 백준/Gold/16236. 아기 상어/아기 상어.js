@@ -8,7 +8,12 @@ let babySharkLevel = 2;
 let levelUpCount = 0;
 let totalDistance = 0;
 
-const directions = [[0, 1], [-1, 0], [0, -1], [1, 0]];
+const directions = [
+  [0, 1],
+  [-1, 0],
+  [0, -1],
+  [1, 0],
+];
 let sharkPoint = [-1, -1];
 
 const careBabyShark = () => {
@@ -22,65 +27,43 @@ const careBabyShark = () => {
         }
       }
     }
-      
-    const dist = Array.from({ length: n + 1 }, () =>
-      Array.from({ length: n + 1 }).fill({ prev: null, visited: false })
-    );
-      
-    const queue = [sharkPoint];
+
+    const visited = Array.from({ length: n + 1 }, () => Array.from({ length: n + 1 }).fill(false));
+
+    const queue = [[...sharkPoint, 0]];
     const [startX, startY] = sharkPoint;
-    dist[startX][startY] = { prev: [-1, -1], visited: true };
+    visited[startX][startY] = true;
     const targets = [];
 
     while (queue.length) {
-      const [x, y] = queue.shift();
+      const [x, y, dist] = queue.shift();
 
       for (const [dx, dy] of directions) {
         const nx = x + dx;
         const ny = y + dy;
 
         if (nx < 0 || nx >= n || ny < 0 || ny >= n) continue;
-        if (babySharkLevel >= matrix[nx][ny] && !dist[nx][ny].visited) {
-          dist[nx][ny] = { prev: [x, y], visited: true };
-          queue.push([nx, ny]);
+        if (babySharkLevel >= matrix[nx][ny] && !visited[nx][ny]) {
+          visited[nx][ny] = true;
+          queue.push([nx, ny, dist + 1]);
 
           // 잡아먹을 물고기 후보의 좌표
           if (babySharkLevel > matrix[nx][ny] && matrix[nx][ny] !== 0) {
-            targets.push({ point: [nx, ny], count: null });
+            targets.push({ point: [nx, ny], count: dist + 1 });
           }
         }
       }
     }
-    
+
     // 더 이상 잡아먹을 물고기가 없을 때 return false;
     if (targets.length === 0) {
-        return false;
+      return false;
     }
-
-    const backTraking = (startX, startY) => {
-      let count = 0;
-      let prevNode = dist[startX][startY].prev;
-      const [prevX, prevY] = prevNode;
-      const [sharkX, sharkY] = sharkPoint;
-
-      while (true) {
-        const [x, y] = prevNode;
-        if (x === -1 && y === -1) {
-          return count;
-        }
-
-        prevNode = dist[x][y].prev;
-        count++;
-      }
-    };
 
     let shortestCount = Infinity;
 
     targets.forEach((target) => {
-      const [x, y] = target.point;
-      const count = backTraking(x, y);
-      shortestCount = Math.min(shortestCount, count);
-      target.count = count;
+      shortestCount = Math.min(shortestCount, target.count);
     });
 
     // 거리가 동일하면 북쪽으로, 그것이 여러 개라면 왼쪽 먹기
@@ -103,15 +86,15 @@ const careBabyShark = () => {
     const [sharkX, sharkY] = sharkPoint;
     matrix[sharkX][sharkY] = 0;
     totalDistance += findFishes[0].count;
-    
+
     return true;
   };
 
-    while(true) {
-      if (!bfs()) break;
-    }
-    
-    console.log(totalDistance)
+  while (true) {
+    if (!bfs()) break;
+  }
+
+  console.log(totalDistance);
 };
 
 careBabyShark();
