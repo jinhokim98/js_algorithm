@@ -9,7 +9,7 @@ def getDirections(x):
 visited = [False for i in range(100001)]
 queue = Queue()
 
-def dfs():
+def bfs():
     queue.put((n, 0))
     visited[n] = True
     
@@ -24,4 +24,4 @@ def dfs():
                 visited[nx] = True
                 queue.put((nx, dist + 1))
         
-print(dfs())
+print(bfs())
