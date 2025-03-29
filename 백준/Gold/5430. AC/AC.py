@@ -29,21 +29,7 @@ for i in range(t):
 
     if isError:
         print('error')
-    elif direction:
-        answer = '['
-        for i in range(0, len(queue)):
-            answer += str(queue[i])
-            if i != len(queue) - 1:
-                answer += ','
-        answer += ']'
-
-        print(answer)
     else:
-        answer = '['
-        for i in range(len(queue) - 1, -1, -1):
-            answer += str(queue[i])
-            if i != 0:
-                answer += ','
-        answer += ']'
-
-        print(answer)
+        if not direction:
+            queue.reverse()
+        print(f"[{','.join(map(str, queue))}]")
