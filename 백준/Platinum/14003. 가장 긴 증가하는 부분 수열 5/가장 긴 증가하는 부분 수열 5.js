@@ -11,8 +11,7 @@ const binarySearch = (e) => {
     let end = lis.length
     while (start < end) {
         let mid = Math.floor((start + end) / 2)
-        if (lis[mid] === e) return mid
-        else if (lis[mid] < e) start = mid + 1
+        if (lis[mid] < e) start = mid + 1
         else end = mid
     }
     return start
